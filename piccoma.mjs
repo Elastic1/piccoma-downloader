@@ -3,10 +3,11 @@ import puppeteer from 'puppeteer-extra'
 import fs from 'fs'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import inquirer from 'inquirer'
-import { login, getBookmarks, getVolumes, getEpisodes, saveVolume } from './lib/piccoma.mjs'
+import Piccoma from './lib/piccoma.mjs'
 const cli = cac('piccoma-downloader')
 cli.option('--mail [mail]', 'Account mail')
 cli.option('--password [password]', 'Account password')
+cli.option('--uncompressed', 'avoid image compress')
 cli.option('--all', 'Download all mangas in bookmarks')
 cli.help()
 const options = cli.parse().options
@@ -36,14 +37,15 @@ const password = options.password
     }
   ])).password
 
-console.log('login...');
-await login(page, mail, password)
+console.log('login...')
+const piccoma = new Piccoma(page, { uncompressed: !!options.uncompressed })
+await piccoma.login(mail, password)
 await page.waitForTimeout(1000)
 await page.setViewport({
   width: 1080,
   height: 1920,
 })
-const bookmarks = await getBookmarks(page)
+const bookmarks = await piccoma.getBookmarks()
 const books = options.all
   ? bookmarks
   : (await inquirer.prompt([
@@ -62,7 +64,7 @@ for (const book of books) {
   const url = `https://piccoma.com/web/product/${book.id}/episodes?etype=${book.webtoon ? 'E' : 'V'}`
   process.stdout.write(`accessing ${book.title}...`)
   const title = book.title
-  const volumes = book.webtoon ? await getEpisodes(page, url) : await getVolumes(page, url)
+  const volumes = book.webtoon ? await piccoma.getEpisodes(url) : await piccoma.getVolumes(url)
   if (volumes.length === 0) {
     process.stdout.write(`\n`)
     await page.waitForTimeout(1000)
@@ -70,7 +72,7 @@ for (const book of books) {
   }
   console.log(`${volumes[0].name}～${volumes[volumes.length - 1].name}`)
   for (const vol of volumes) {
-    const volName = vol.name.replace('プロローグ', '第0話');
+    const volName = vol.name.replace('プロローグ', '第0話')
     if (fs.existsSync(`manga/${title}/${volName}`) || fs.existsSync(`zip/${title}/${volName}.zip`)) {
       continue
     }
@@ -80,7 +82,7 @@ for (const book of books) {
     for (let i = 0; i < 2; i++) {
       try {
         const startTime = Date.now()
-        await saveVolume(page, url, distDir, (current, imgLen) => {
+        await piccoma.saveVolume(url, distDir, (current, imgLen) => {
           process.stdout.write(`\r - ${volName} ${current}/${imgLen}`)
         })
         const endTime = Date.now()
@@ -94,3 +96,4 @@ for (const book of books) {
   }
 }
 console.log('end.')
+process.exit()
