@@ -7,7 +7,6 @@ import Piccoma from './lib/piccoma.mjs'
 const cli = cac('piccoma-downloader')
 cli.option('--mail [mail]', 'Account mail')
 cli.option('--password [password]', 'Account password')
-cli.option('--uncompressed', 'avoid image compress')
 cli.option('--all', 'Download all mangas in bookmarks')
 cli.help()
 const options = cli.parse().options
@@ -38,7 +37,7 @@ const password = options.password
   ])).password
 
 console.log('login...')
-const piccoma = new Piccoma(page, { uncompressed: !!options.uncompressed })
+const piccoma = new Piccoma(page)
 await piccoma.login(mail, password)
 await page.waitForTimeout(1000)
 await page.setViewport({
