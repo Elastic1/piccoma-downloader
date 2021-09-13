@@ -5,19 +5,27 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import inquirer from 'inquirer'
 import Piccoma from './lib/piccoma.mjs'
 const cli = cac('piccoma-downloader')
+cli.option('--config [path]', 'path for config file')
 cli.option('--mail [mail]', 'Account mail')
 cli.option('--password [password]', 'Account password')
 cli.option('--all', 'Download all mangas in bookmarks')
+cli.option('--manga [type]', 'chapter or volume')
+cli.option('--webtoon [type]', 'chapter or volume')
 cli.help()
 const options = cli.parse().options
 if (options.help) {
   process.exit()
 }
+const config = await readConfig(options.config)
+Object.assign({
+  webtoon: 'chapter',
+  manga: 'volume'
+}, options, config)
 puppeteer.use(StealthPlugin())
 const browser = await puppeteer.launch({ userDataDir: './data', headless: true })
 const page = await browser.newPage()
 
-const mail = options.mail
+const mail = options.mail || options.sessionid
   ? options.mail
   : (await inquirer.prompt([
     {
@@ -26,7 +34,7 @@ const mail = options.mail
       message: 'Account mail:'
     }
   ])).mail
-const password = options.password
+const password = options.password || options.sessionid
   ? options.password
   : (await inquirer.prompt([
     {
@@ -36,9 +44,25 @@ const password = options.password
     }
   ])).password
 
-console.log('login...')
 const piccoma = new Piccoma(page)
-await piccoma.login(mail, password)
+if (options.sessionid) {
+  await page.setCookie({
+    name: 'sessionid',
+    value: options.sessionid,
+    domain: 'piccoma.com',
+    path: '/',
+    httpOnly: true,
+    secure: true,
+    session: false,
+    sameParty: false,
+    sourceScheme: 'Secure',
+    sourcePort: 443
+  })
+  await page.goto('https://piccoma.com/web/')
+} else {
+  console.log('login...')
+  await piccoma.login(mail, password)
+}
 await page.waitForTimeout(1000)
 await page.setViewport({
   width: 1080,
@@ -60,10 +84,13 @@ const books = options.all
   ])).books
 
 for (const book of books) {
-  const url = `https://piccoma.com/web/product/${book.id}/episodes?etype=${book.webtoon ? 'E' : 'V'}`
+  const bookType = book.webtoon ? options.webtoon : options.manga
+  const url = `https://piccoma.com/web/product/${book.id}/episodes?etype=${bookType == 'chapter' ? 'E' : 'V'}`
   process.stdout.write(`accessing ${book.title}...`)
   const title = book.title
-  const volumes = book.webtoon ? await piccoma.getEpisodes(url) : await piccoma.getVolumes(url)
+  const volumes = bookType == 'chapter'
+    ? await piccoma.getEpisodes(url)
+    : await piccoma.getVolumes(url)
   if (volumes.length === 0) {
     process.stdout.write(`\n`)
     await page.waitForTimeout(1000)
@@ -85,7 +112,7 @@ for (const book of books) {
           process.stdout.write(`\r - ${volName} ${current}/${imgLen}`)
         })
         const endTime = Date.now()
-        process.stdout.write(`. sent time ${Math.floor((endTime - startTime) / 1000)}s\n`)
+        process.stdout.write(`. spent time ${Math.floor((endTime - startTime) / 1000)}s\n`)
         break
       } catch (error) {
         fs.rmSync(distDir, { force: true, recursive: true })
@@ -96,3 +123,12 @@ for (const book of books) {
 }
 console.log('end.')
 process.exit()
+
+async function readConfig(path) {
+  if (path == null || path == '') {
+    return {}
+  }
+  const configStr = await fs.promises.readFile(path)
+  const config = JSON.parse(configStr)
+  return config
+}
