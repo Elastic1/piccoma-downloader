@@ -11,20 +11,22 @@ cli.option('--password [password]', 'Account password')
 cli.option('--all', 'Download all mangas in bookmarks')
 cli.option('--manga [type]', 'chapter or volume')
 cli.option('--webtoon [type]', 'chapter or volume')
+cli.option('--timeout [ms]', 'timeout time in milliseconds(default: 30000ms)')
 cli.help()
-const options = cli.parse().options
-if (options.help) {
+const _options = cli.parse().options
+if (_options.help) {
   process.exit()
 }
-const config = await readConfig(options.config)
-Object.assign({
+const config = await readConfig(_options.config)
+const options = Object.assign({
   webtoon: 'chapter',
-  manga: 'volume'
-}, options, config)
+  manga: 'volume',
+  timeout: 30000
+}, _options, config)
 puppeteer.use(StealthPlugin())
 const browser = await puppeteer.launch({ userDataDir: './data', headless: true })
 const page = await browser.newPage()
-
+await page.setDefaultNavigationTimeout(options.timeout)
 const mail = options.mail || options.sessionid
   ? options.mail
   : (await inquirer.prompt([

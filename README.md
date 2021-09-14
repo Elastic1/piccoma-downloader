@@ -32,19 +32,21 @@ node piccoma.mjs --sessionid <mysessionId>
 ``` 
 
 #### `-h, --help`  
-display help message
+Display help message
 #### `--mail`
-account mail
+Account mail
 #### `--password`
-account password
+Account password
 #### `--sessionid`
-session id of your piccoma login. For accounts that do not support email address login. 
+Session id of your piccoma login. For accounts that do not support email address login. 
 #### `--all`
 Download all mangas in bookmarks. If not specified, the selection cli will be displayed.
 #### `--manga`
 `chapter` or `volume` for manga (default: volume)
 #### `--webtoon`
 `chapter` or `volume` for webtoon (default: chapter)
+#### `--timeout`
+Maximum navigation time in milliseconds. If `0`, the timeout becomes infinite. (default: 30000ms)
 #### `--config`
-path of config file. You can set the cli options in config file. Here's a [sample](https://github.com/Elastic1/piccoma-downloader/blob/main/config.json)
+Path of config file. You can set the cli options in config file. Here's a [sample](https://github.com/Elastic1/piccoma-downloader/blob/main/config.json)
 

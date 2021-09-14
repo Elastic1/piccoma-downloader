@@ -4,5 +4,6 @@
   "sessionid": "",
   "manga": "volume",
   "webtoon": "chapter",
-  "all": true
+  "all": true,
+  "timeout": 30000
 }
