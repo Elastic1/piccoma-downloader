@@ -12,6 +12,9 @@ cli.option('--all', 'Download all mangas in bookmarks')
 cli.option('--manga [type]', 'chapter or volume')
 cli.option('--webtoon [type]', 'chapter or volume')
 cli.option('--timeout [ms]', 'timeout time in milliseconds(default: 30000ms)')
+cli.option('--use-free', 'try to use one free ticket')
+cli.option('--format', 'jpg or png (default: png)')
+cli.option('--quality', 'jpg quality')
 cli.help()
 const _options = cli.parse().options
 if (_options.help) {
@@ -21,7 +24,9 @@ const config = await readConfig(_options.config)
 const options = Object.assign({
   webtoon: 'chapter',
   manga: 'volume',
-  timeout: 30000
+  timeout: 30000,
+  format: 'png',
+  quality: 85
 }, _options, config)
 puppeteer.use(StealthPlugin())
 const browser = await puppeteer.launch({ userDataDir: './data', headless: true })
@@ -91,7 +96,7 @@ for (const book of books) {
   process.stdout.write(`accessing ${book.title}...`)
   const title = book.title
   const volumes = bookType == 'chapter'
-    ? await piccoma.getEpisodes(url)
+    ? await piccoma.getEpisodes(url, options.useFree)
     : await piccoma.getVolumes(url)
   if (volumes.length === 0) {
     process.stdout.write(`\n`)
@@ -110,7 +115,7 @@ for (const book of books) {
     for (let i = 0; i < 2; i++) {
       try {
         const startTime = Date.now()
-        await piccoma.saveVolume(url, distDir, (current, imgLen) => {
+        await piccoma.saveVolume(url, distDir, options, (current, imgLen) => {
           process.stdout.write(`\r - ${volName} ${current}/${imgLen}`)
         })
         const endTime = Date.now()
