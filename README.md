@@ -4,7 +4,7 @@ Download manga from [Piccoma](https://piccoma.com/)
 ## Basic Usage
 Make sure you have a [node.js](https://nodejs.org/) environment
 1. Clone or download this repository
-2. Run `npm install`
+2. Run `npm ci`
 3. Run `node piccoma.mjs`
 4. Enter your mail and password
 5. Select mangas from the bookmarks list (all books are selected by default).

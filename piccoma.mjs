@@ -51,7 +51,7 @@ const password = options.password || options.sessionid
     }
   ])).password
 
-const piccoma = new Piccoma(page)
+const piccoma = new Piccoma(page, options)
 if (options.sessionid) {
   await page.setCookie({
     name: 'sessionid',
@@ -115,7 +115,7 @@ for (const book of books) {
     for (let i = 0; i < 2; i++) {
       try {
         const startTime = Date.now()
-        await piccoma.saveVolume(url, distDir, options, (current, imgLen) => {
+        await piccoma.saveVolume(url, distDir, (current, imgLen) => {
           process.stdout.write(`\r - ${volName} ${current}/${imgLen}`)
         })
         const endTime = Date.now()
