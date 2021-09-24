@@ -96,7 +96,7 @@ for (const book of books) {
   process.stdout.write(`accessing ${book.title}...`)
   const title = book.title
   const volumes = bookType == 'chapter'
-    ? await piccoma.getEpisodes(url, options.useFree)
+    ? await piccoma.getEpisodes(url)
     : await piccoma.getVolumes(url)
   if (volumes.length === 0) {
     process.stdout.write(`\n`)
