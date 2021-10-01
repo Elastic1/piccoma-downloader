@@ -3,32 +3,26 @@ Download manga from [Piccoma](https://piccoma.com/)
 
 ## Basic Usage
 Make sure you have a [node.js](https://nodejs.org/) environment
-1. Clone or download this repository
-2. Run `npm ci`
-3. Run `node piccoma.mjs`
-4. Enter your mail and password
-5. Select mangas from the bookmarks list (all books are selected by default).
+1. Download [release](https://github.com/Elastic1/piccoma-downloader/releases)
+2. Run `./piccoma.exe`
+3. Enter your mail and password
+4. Select mangas from the bookmarks list (all books are selected by default).
 ![usage-list](usage-list.png)
 
-6. Wait for the download to finish.
+5. Wait for the download to finish.
 ![usage](usage.png)
-- compress downloaded mangas into zip
-
-```
-node archive.mjs 
-```
 
 ## Options
 
 Examples:  
 ```
-node piccoma.mjs --config config.json
+./piccoma.exe --config config.json
 ``` 
 ```
-node piccoma.mjs --mail user@example.com --password mypassword --all
+./piccoma.exe --mail user@example.com --password mypassword --all
 ``` 
 ```
-node piccoma.mjs --sessionid <mysessionId>
+./piccoma.exe --sessionid <mysessionId>
 ``` 
 
 #### `-h, --help`  
@@ -46,7 +40,7 @@ Download all mangas in bookmarks. If not specified, the selection cli will be di
 #### `--webtoon`
 `chapter` or `volume` for webtoon (default: chapter)
 #### `--timeout`
-Maximum navigation time in milliseconds. If `0`, the timeout becomes infinite. (default: 30000ms)
+Maximum navigation time in milliseconds. If `0` no timeout. (default: 60000ms)
 #### `--use-free`
 try to use one free ticket
 #### `--format`
