@@ -2,6 +2,7 @@ const cac = require('cac').default
 const inquirer = require('inquirer')
 const fs = require('fs')
 const Piccoma = require('./lib/piccoma')
+const path = require('path')
 const cli = cac('piccoma-downloader')
 cli.option('--config [path]', 'path for config file')
 cli.option('--mail [mail]', 'Account mail')
@@ -12,7 +13,8 @@ cli.option('--webtoon [type]', 'chapter or volume')
 cli.option('--timeout [ms]', 'timeout time in milliseconds(default: 60000ms)')
 cli.option('--use-free', 'try to use one free ticket')
 cli.option('--format', 'jpg or png (default: png)')
-cli.option('--quality', 'jpg quality')
+cli.option('--quality', 'jpg quality (default: 85)')
+cli.option('--out', 'output directory (default: manga)')
 cli.help()
 const cliOptions = cli.parse().options
 if (cliOptions.help) {
@@ -44,10 +46,10 @@ async function main() {
     console.log(`${episodes[0].name}～${episodes[episodes.length - 1].name}`)
     for (const episode of episodes) {
       const episodeName = episode.name
-      if (fs.existsSync(`manga/${book.title}/${episodeName}`)) {
+      const distDir = path.resolve(options.out, book.title, episodeName)
+      if (fs.existsSync(distDir)) {
         continue
       }
-      const distDir = `manga/${book.title}/${episodeName}`
       const url = `https://piccoma.com/web/viewer/${book.id}/${episode.id}`
       await sleep(1000)
       for (let i = 0; i < 2; i++) {
@@ -125,7 +127,8 @@ async function readOptions(cliOptions) {
     manga: 'volume',
     timeout: 60000,
     format: 'png',
-    quality: 85
+    quality: 85,
+    out: 'manga',
   }
   if (cliOptions.config == null || cliOptions.config == '') {
     return Object.assign(defaultOptions, cliOptions)

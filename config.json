@@ -7,5 +7,6 @@
   "all": true,
   "timeout": 60000,
   "useFree": true,
-  "format": "png"
+  "format": "png",
+  "out": "manga"
 }
