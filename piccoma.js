@@ -22,10 +22,14 @@ if (cliOptions.help) {
 main()
 async function main() {
   const options = await readOptions(cliOptions)
-  const mail = await askMail(options)
-  const password = await askPassword(options)
   const piccoma = new Piccoma(options)
-  await piccoma.login(mail, password)
+  if (options.sessionid && await piccoma.checkAuth()) {
+    console.log('use sessionid')
+  } else {
+    const mail = await askMail(options)
+    const password = await askPassword(options)
+    await piccoma.login(mail, password)
+  }
   await sleep(1000)
   const bookmarks = await piccoma.getBookmarks()
   const books = await selectBooks(options, bookmarks)
