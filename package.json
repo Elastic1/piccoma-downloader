@@ -1,6 +1,6 @@
 {
   "name": "piccoma-downloader",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Piccoma downloader",
   "main": "piccoma.js",
   "bin": "piccoma.js",
@@ -9,7 +9,7 @@
     "build": "pkg ."
   },
   "pkg": {
-    "targets": ["node14-linux-x64", "node14-macos-x64", "node14-win-x64"],
+    "targets": ["node16-linux-x64", "node16-macos-x64", "node16-win-x64"],
     "outputPath": "dist"
   },
   "dependencies": {
@@ -26,6 +26,6 @@
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
-    "pkg": "^5.3.3"
+    "pkg": "^5.4.1"
   }
 }
