@@ -2,7 +2,6 @@
 Download manga from [Piccoma](https://piccoma.com/)
 
 ## Basic Usage
-Make sure you have a [node.js](https://nodejs.org/) environment
 1. Download [release](https://github.com/Elastic1/piccoma-downloader/releases)
 2. Run `./piccoma.exe`
 3. Enter your mail and password
