@@ -1,6 +1,6 @@
 {
   "name": "piccoma-downloader",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Piccoma downloader",
   "main": "piccoma.js",
   "bin": "piccoma.js",
