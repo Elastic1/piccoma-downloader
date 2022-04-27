@@ -12,19 +12,36 @@ cli.option('--manga [type]', 'chapter or volume')
 cli.option('--webtoon [type]', 'chapter or volume')
 cli.option('--timeout [ms]', 'timeout time in milliseconds(default: 60000ms)')
 cli.option('--use-free', 'try to use one free ticket')
-cli.option('--format', 'jpg or png (default: png)')
-cli.option('--quality', 'jpg quality (default: 85)')
-cli.option('--out', 'output directory (default: manga)')
+cli.option('--format [format]', 'jpg or png (default: png)')
+cli.option('--quality [quality]', 'jpg quality (default: 85)')
+cli.option('--out [path]', 'output directory (default: manga)')
+cli.option('--chapter-url [url]', 'Download chapter url.')
 cli.help()
 const cliOptions = cli.parse().options
 if (cliOptions.help) {
   process.exit()
 }
 
-main()
+main().finally(() => {
+  console.log('end')
+})
 async function main() {
   const options = await readOptions(cliOptions)
   const piccoma = new Piccoma(options)
+  if (options.chapterUrl) {
+    for (let i = 0; i < 2; i++) {
+      try {
+        const startTime = Date.now()
+        await piccoma.saveEpisodeDirect(options.chapterUrl)
+        const endTime = Date.now()
+        process.stdout.write(`. spent time ${Math.floor((endTime - startTime) / 1000)}s\n`)
+        break
+      } catch (error) {
+        console.log('error occurred. retry ', error.message)
+      }
+    }
+    return
+  }
   if (options.sessionid && await piccoma.checkAuth()) {
     console.log('use sessionid')
   } else {
@@ -68,7 +85,6 @@ async function main() {
       }
     }
   }
-  console.log('end')
 }
 
 async function askPassword(options) {

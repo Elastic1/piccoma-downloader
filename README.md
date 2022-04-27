@@ -50,4 +50,7 @@ jpg quality(default: 85)
 Output directory (default: manga)
 #### `--config`
 Path of config file. You can set the cli options in config file. Here's a [sample](https://github.com/Elastic1/piccoma-downloader/blob/main/config.json)
+#### `--chapter-url`
+Dowload chapter url
+
 
