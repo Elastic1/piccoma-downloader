@@ -26,6 +26,8 @@ Examples:
 
 #### `-h, --help`  
 Display help message
+#### `--type`
+`jp` or `fr` (default: jp)
 #### `--mail`
 Account mail
 #### `--password`

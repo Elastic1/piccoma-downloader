@@ -2,14 +2,16 @@ const cac = require('cac').default
 const inquirer = require('inquirer')
 const fs = require('fs')
 const Piccoma = require('./lib/piccoma')
+const PiccomaFr = require('./lib/piccoma-fr')
 const path = require('path')
 const cli = cac('piccoma-downloader')
+cli.option('--type [type]', 'jp or fr (default: jp)')
 cli.option('--config [path]', 'path for config file')
 cli.option('--mail [mail]', 'Account mail')
 cli.option('--password [password]', 'Account password')
 cli.option('--all', 'Download all mangas in bookmarks')
-cli.option('--manga [type]', 'chapter or volume')
-cli.option('--webtoon [type]', 'chapter or volume')
+cli.option('--manga [type]', 'chapter or volume (default: volume)')
+cli.option('--webtoon [type]', 'chapter or volume (default: chapter)')
 cli.option('--timeout [ms]', 'timeout time in milliseconds(default: 60000ms)')
 cli.option('--use-free', 'try to use one free ticket')
 cli.option('--format [format]', 'jpg or png (default: png)')
@@ -27,7 +29,8 @@ main().finally(() => {
 })
 async function main() {
   const options = await readOptions(cliOptions)
-  const piccoma = new Piccoma(options)
+  options.type = await askType(options)
+  const piccoma = options.type == 'fr' ? new PiccomaFr(options) : new Piccoma(options)
   if (options.chapterUrl) {
     for (let i = 0; i < 2; i++) {
       try {
@@ -67,12 +70,11 @@ async function main() {
       if (fs.existsSync(distDir)) {
         continue
       }
-      const url = `https://piccoma.com/web/viewer/${book.id}/${episode.id}`
       await sleep(1000)
       for (let i = 0; i < 2; i++) {
         try {
           const startTime = Date.now()
-          await piccoma.saveEpisode(url, distDir, (current, imgLen) => {
+          await piccoma.saveEpisode(episode.url, distDir, (current, imgLen) => {
             process.stdout.write(`\r - ${episodeName} ${current}/${imgLen}`)
           })
           const endTime = Date.now()
@@ -85,6 +87,24 @@ async function main() {
       }
     }
   }
+}
+
+async function askType(options) {
+  if (options.type) {
+    return options.type
+  }
+  const prompt = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'type',
+      message: 'Piccoma type:',
+      choices: [
+        'jp',
+        'fr'
+      ]
+    }
+  ])
+  return prompt.type
 }
 
 async function askPassword(options) {

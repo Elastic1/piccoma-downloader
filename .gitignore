@@ -2,3 +2,4 @@ data
 manga
 node_modules
 dist
+\.*
