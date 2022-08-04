@@ -1,9 +1,9 @@
-const cac = require('cac').default
-const inquirer = require('inquirer')
-const fs = require('fs')
-const Piccoma = require('./lib/piccoma')
-const PiccomaFr = require('./lib/piccoma-fr')
-const path = require('path')
+import cac from 'cac'
+import fs from 'fs'
+import inquirer from 'inquirer'
+import path from 'path'
+import Piccoma from './lib/piccoma.js'
+import PiccomaFr from './lib/piccoma-fr.js'
 const cli = cac('piccoma-downloader')
 cli.option('--type [type]', 'jp or fr (default: jp)')
 cli.option('--config [path]', 'path for config file')
@@ -17,7 +17,8 @@ cli.option('--use-free', 'try to use one free ticket')
 cli.option('--format [format]', 'jpg or png (default: png)')
 cli.option('--quality [quality]', 'jpg quality (default: 85)')
 cli.option('--out [path]', 'output directory (default: manga)')
-cli.option('--chapter-url [url]', 'Download chapter url.')
+cli.option('--chapter-url [url]', 'Download chapter url')
+cli.option('--limit [limit]', 'max concurrency limit (default: 2)')
 cli.help()
 const cliOptions = cli.parse().options
 if (cliOptions.help) {
@@ -165,6 +166,7 @@ async function readOptions(cliOptions) {
     format: 'png',
     quality: 85,
     out: 'manga',
+    limit: 2,
   }
   if (cliOptions.config == null || cliOptions.config == '') {
     return Object.assign(defaultOptions, cliOptions)

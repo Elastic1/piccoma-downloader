@@ -1,20 +1,14 @@
 {
   "name": "piccoma-downloader",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "description": "Piccoma downloader",
+  "type": "module",
   "main": "piccoma.js",
   "bin": "piccoma.js",
   "license": "MIT",
   "scripts": {
-    "build": "pkg ."
-  },
-  "pkg": {
-    "targets": [
-      "node16-linux-x64",
-      "node16-macos-x64",
-      "node16-win-x64"
-    ],
-    "outputPath": "dist"
+    "build": "esbuild piccoma.js --bundle --outfile=dist/bundle.js --platform=node --external:deasync --minify",
+    "pkg": "pkg dist/bundle.js -o dist/piccoma-downloader -t node16-linux,node16-macos,node16-win --options no-deprecation"
   },
   "dependencies": {
     "archiver": "^5.3.1",
@@ -22,15 +16,16 @@
     "axios-cookiejar-support": "^4.0.2",
     "cac": "^6.7.12",
     "cheerio": "^1.0.0-rc.12",
-    "glob": "^8.0.3",
     "image-scramble": "^2.2.2",
     "inquirer": "^8.2.3",
+    "p-limit": "^4.0.0",
     "pureimage": "^0.3.14",
     "shuffle-seed": "^1.1.6",
     "simple-get": "^4.0.1",
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
-    "pkg": "^5.7.0"
+    "esbuild": "^0.14.53",
+    "pkg": "^5.8.0"
   }
 }
