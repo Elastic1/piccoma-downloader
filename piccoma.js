@@ -33,6 +33,11 @@ async function main() {
   options.type = await askType(options)
   const piccoma = options.type == 'fr' ? new PiccomaFr(options) : new Piccoma(options)
   if (options.chapterUrl) {
+    if (options.type == 'jp' && options.sessionid && await piccoma.checkAuth()) {
+      console.log('use sessionid')
+    } else if (options.type == 'jp' && options.mail && options.password) {
+      await piccoma.login(options.mail, options.password)
+    }
     for (let i = 0; i < 2; i++) {
       try {
         const startTime = Date.now()
