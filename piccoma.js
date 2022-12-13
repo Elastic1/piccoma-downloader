@@ -35,7 +35,7 @@ async function main() {
   if (options.chapterUrl) {
     if (options.type == 'jp' && options.sessionid && await piccoma.checkAuth()) {
       console.log('use sessionid')
-    } else if (options.type == 'jp' && options.mail && options.password) {
+    } else if (options.mail && options.password) {
       await piccoma.login(options.mail, options.password)
     }
     for (let i = 0; i < 2; i++) {
