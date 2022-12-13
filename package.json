@@ -1,6 +1,6 @@
 {
   "name": "piccoma-downloader",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Piccoma downloader",
   "type": "module",
   "main": "piccoma.js",
@@ -13,19 +13,19 @@
   "dependencies": {
     "archiver": "^5.3.1",
     "axios": "^0.27.2",
-    "axios-cookiejar-support": "^4.0.2",
-    "cac": "^6.7.12",
+    "axios-cookiejar-support": "^4.0.3",
+    "cac": "^6.7.14",
     "cheerio": "^1.0.0-rc.12",
-    "image-scramble": "^2.2.2",
-    "inquirer": "^8.2.3",
+    "inquirer": "^9.1.4",
+    "jpeg-js": "^0.4.4",
     "p-limit": "^4.0.0",
     "pureimage": "^0.3.14",
     "shuffle-seed": "^1.1.6",
     "simple-get": "^4.0.1",
-    "tough-cookie": "^4.0.0"
+    "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
-    "esbuild": "^0.14.53",
+    "esbuild": "^0.16.4",
     "pkg": "^5.8.0"
   }
 }
