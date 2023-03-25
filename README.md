@@ -33,7 +33,7 @@ Account mail
 #### `--password`
 Account password
 #### `--sessionid`
-Session id of your piccoma login. For accounts that do not support email address login. 
+Session id of your piccoma login. For accounts that do not support email address login. Only for JP version.
 #### `--all`
 Download all mangas in bookmarks. If not specified, the selection cli will be displayed.
 #### `--manga`
