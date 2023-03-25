@@ -18,6 +18,7 @@ cli.option('--format [format]', 'jpg or png (default: png)')
 cli.option('--quality [quality]', 'jpg quality (default: 85)')
 cli.option('--out [path]', 'output directory (default: manga)')
 cli.option('--chapter-url [url]', 'Download chapter url')
+cli.option('--volume-rename', 'Rename volume')
 cli.option('--limit [limit]', 'max concurrency limit (default: 2)')
 cli.help()
 const cliOptions = cli.parse().options
@@ -41,7 +42,7 @@ async function main() {
     for (let i = 0; i < 2; i++) {
       try {
         const startTime = Date.now()
-        await piccoma.saveEpisodeDirect(options.chapterUrl)
+        await piccoma.saveEpisodeDirect(options.chapterUrl, options.volumeRename)
         const endTime = Date.now()
         process.stdout.write(`. spent time ${Math.floor((endTime - startTime) / 1000)}s\n`)
         break
@@ -72,7 +73,8 @@ async function main() {
     console.log(`${episodes[0].name}～${episodes[episodes.length - 1].name}`)
     for (const episode of episodes) {
       const episodeName = episode.name
-      const distDir = path.resolve(options.out, book.title, episodeName)
+      const title = options.volumeRename == null ? book.title : options.volumeRename;
+      const distDir = path.resolve(options.out, title, episodeName)
       if (fs.existsSync(distDir)) {
         continue
       }
