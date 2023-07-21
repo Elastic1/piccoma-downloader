@@ -26,7 +26,7 @@ if (cliOptions.help) {
   process.exit()
 }
 
-main().finally(() => {
+main().catch(err => console.log(err.message, err.stack)).finally(() => {
   console.log('end')
 })
 async function main() {
