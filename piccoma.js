@@ -17,7 +17,7 @@ cli.option('--use-free', 'try to use one free ticket')
 cli.option('--format [format]', 'jpg or png (default: png)')
 cli.option('--quality [quality]', 'jpg quality (default: 85)')
 cli.option('--out [path]', 'output directory (default: manga)')
-cli.option('--chapter-url [url url1 url2...]', 'Download chapter url (support multiple url)')
+cli.option('--chapter-url [url]', 'Download chapter url (support multiple url)')
 cli.option('--volume-rename', 'Rename volume')
 cli.option('--limit [limit]', 'max concurrency limit (default: 2)')
 cli.help()
@@ -39,13 +39,12 @@ async function main() {
     } else if (options.mail && options.password) {
       await piccoma.login(options.mail, options.password)
     }
-    const chapterUrls = options.chapterUrl;
-    const chapterUrlArray = chapterUrls.split(" ");
-    for (let y = 0; y < chapterUrlArray.length; y++) {
+    const chapterUrls = [].concat(options.chapterUrl);
+    for (let y = 0; y < chapterUrls.length; y++) {
       for (let i = 0; i < 2; i++) {
         try {
           const startTime = Date.now()
-          await piccoma.saveEpisodeDirect(chapterUrlArray[y], options.volumeRename)
+          await piccoma.saveEpisodeDirect(chapterUrls[y], options.volumeRename)
           const endTime = Date.now()
           process.stdout.write(`. spent time ${Math.floor((endTime - startTime) / 1000)}s\n`)
           break
