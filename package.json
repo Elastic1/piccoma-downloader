@@ -1,14 +1,18 @@
 {
   "name": "piccoma-downloader",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Piccoma downloader",
   "type": "module",
   "main": "piccoma.js",
-  "bin": "piccoma.js",
+  "bin": "dist/bundle.js",
   "license": "MIT",
+  "pkg": {
+    "assets": "assets/**/*",
+    "outputPath": "dist"
+  },
   "scripts": {
     "build": "esbuild piccoma.js --bundle --outfile=dist/bundle.js --platform=node --external:deasync --minify",
-    "pkg": "pkg dist/bundle.js -o dist/piccoma-downloader -t node16-linux,node16-macos,node16-win --options no-deprecation"
+    "pkg": "pkg . -t node16-win,node16-macos,node16-linux --options no-deprecation"
   },
   "dependencies": {
     "archiver": "^5.3.1",
