@@ -67,7 +67,7 @@ async function main() {
   const books = await selectBooks(options, bookmarks)
   for (const book of books) {
     process.stdout.write(`accessing ${book.title}...`)
-    const episodes = await piccoma.getEpisodes(book.id, book.webtoon)
+    const episodes = await getEpisodes(piccoma, book)
     if (episodes.length === 0) {
       process.stdout.write(`\n`)
       await sleep(1000)
@@ -97,6 +97,16 @@ async function main() {
         }
       }
     }
+  }
+}
+
+async function getEpisodes(piccoma, book) {
+  try {
+    const episodes = await piccoma.getEpisodes(book.id, book.webtoon)
+    return episodes
+  } catch (error) {
+    console.log('error occurred. skip', error)
+    return []
   }
 }
 
