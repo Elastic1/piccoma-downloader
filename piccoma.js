@@ -93,7 +93,7 @@ async function main() {
           break
         } catch (error) {
           fs.rmSync(distDir, { force: true, recursive: true })
-          console.log('error occurred. retry ', error)
+          console.log('error occurred. retry ', error.stack)
         }
       }
     }
